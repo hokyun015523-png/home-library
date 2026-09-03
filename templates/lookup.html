@@ -1,0 +1,47 @@
+{# home_library_v4/templates/lookup.html - base.html상속받는다 - isbn 빠르게 등록 #}
+{% extends "base.html" %}
+{% block title %}ISBN 조회 등록{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">ISBN으로 빠르게 등록하기</h2>
+<div class="card form-card p-4 mb-4" style="max-width: 600px;">
+    <form action="/ui/books/lookup" method="post" class="row g-2">
+        <div class="col-auto flex-grow-1">
+            <input type="text" name="isbn" class="form-control"
+            placeholder="ISBN 입력 (예: 9791190090018)"
+            value="{{ isbn_input or '' }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">
+                조회 후 등록
+            </button>
+        </div>
+    </form>
+</div>
+
+
+{% if result %}
+    {% if result.status == 'ok' %}
+        <div class="alert alert-success" style="max-width: 600px;">
+            등록됨: <strong>{{ result.book.title }}</strong>
+            <span class="badge bg-secondary">{{ result.book.recognition_status }}</span>
+        </div>
+
+    {% elif result.status == 'duplicate' %}
+        <div class="alert alert-info" style="max-width: 600px;">
+            이미 서재에 있는 책이에요! <br>
+            <strong>{{ result.book.title }}</strong><br>
+            저자: {{ result.book.author or '정보 없음' }} / 출판사 {{ result.book.publisher or '정보 없음' }}
+        </div>
+
+    {% else %}
+        <div class="alert alert-danger" style="max-width: 600px;">
+            <strong>{{ result.message }}</strong>
+        </div>        
+    
+    {% endif %}
+
+{% endif %}
+
+
+{% endblock%}

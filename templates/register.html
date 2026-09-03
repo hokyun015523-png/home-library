@@ -1,0 +1,42 @@
+{# home_library_v4/templates/register.html - base.html상속받는다 - isbn,책 사진 등록 #}
+{% extends "base.html" %}
+{% block title %}표지 사진 등록{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">ISBN + 표지 사진 함께 등록하기</h2>
+<div class="card form-card p-4 mb-4" style="max-width: 500px;">
+    <form action="/ui/books/register" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">ISBN</label>
+            <input type="text" name="isbn" class="form-control" value="{{ isbn_input or '' }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">표지사진</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+        </div>  
+        <button type="submit" class="btn btn-primary w-100">등록하기</button>    
+    </form>
+</div>
+
+{% if result %}
+    {% if result.status == 'ok' %}
+        <div class="alert alert-success" style="max-width: 500px;">
+            등록됨: <strong>{{ result.book.title }}</strong>
+            <span class="badge bg-secondary">{{ result.book.recognition_status }}</span>
+        </div>
+
+    {% elif result.status == 'duplicate' %}
+        <div class="alert alert-info" style="max-width: 500px;">
+            이미 서재에 있는 책이에요! <br>
+            <strong>{{ result.book.title }}</strong>
+        </div>
+
+    {% else %}
+        <div class="alert alert-danger" style="max-width: 500px;">
+            <strong>{{ result.message }}</strong>
+        </div>        
+    
+    {% endif %}
+
+{% endif %}
+{% endblock %}

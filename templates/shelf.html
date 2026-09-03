@@ -1,0 +1,41 @@
+{# home_library_v4/templates/shelf.html - base.html상속받는다 - 서재 보기 #}
+{% extends "base.html" %}
+{% block title %}서재 보기{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">등록된 책 ({{ shelf_items|length }}권)</h2>
+
+<div class="row row-cols-2 row-cols-md-4 g-4">
+    {% for item in shelf_items %}
+    <div class="col">
+        <div class="card book-card h-100">
+            {# 책 표지가 있다면 #}
+            {% if item.cover_url %}
+            <img src="{{ item.cover_url }}" alt="{{ item.book.title }}" class="card-img-top"
+                style="height: 220px; object-fit: cover;">
+            {# 책 표지가 없다면 - 그라데이션 placeholder로 표시 #}
+            {% else %}
+            <div class="card-img-top book-cover-placeholder d-flex align-items-center justify-content-center"
+                style="height: 220px;">
+            책 아이콘으로 바꾸기
+            </div>
+            {% endif %}
+
+            <div class="card-body">
+                <h6 class="card-title">{{ item.book.title }}</h6>
+                <p class="card-text text-muted small">{{ item.book.author or '저자 미상' }}</p>
+                <span class="badge bg-{{ 'success' if item.book.recognition_status == 'confirmed' else 'warning' }}">
+                    {{ item.book.recognition_status }}
+                </span>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {# 책리스트가 하나도 없을 때 (등록된 책이 없을 때 == 반복을 못할 때) 안내 문구 #}
+    <div class="col-12 text-center py-5 text-muted">
+        <p class="mt-3">아직 등록된 책이 없습니다. 조회 등록 또는 표지 사진 등록에서 첫 책을 등록해보세요!</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
