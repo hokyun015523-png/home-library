@@ -17,4 +17,4 @@ def test_하이픈이_있는_isbn13을_숫자로_정리한다():
 def test_체크섬이_틀린_isbn은_none을_반환한다():
     # 마지막 자리만 9만 0으로 바꿔서 체크섬이 깨지도록 해본다
     # normalize_isbn은 숫자처럼 보이지만 가짜인 ISBN을 여기서 걸러내야 한다.
-    assert normalize_isbn('978-89-6626-3182-0')
+    assert normalize_isbn('978-89-6626-3182-0') is None
