@@ -21,3 +21,6 @@ def test_체크섬이_틀린_isbn은_none을_반환한다():
 
 def test_ISBN10_유효한_경우_그대로_반환한다():
     assert normalize_isbn('0-306-40615-2') == '0306406152'
+
+def test_ISBN10_체크자리가_X인_경우도_처리한다():
+    assert normalize_isbn('0-8044-2957-x') == '080442957x' # 소문자도 가능
