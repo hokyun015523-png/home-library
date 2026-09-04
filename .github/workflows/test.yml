@@ -15,7 +15,7 @@ jobs: # 아래에 실행할 작업 단위(job)들을 나열한다. - 서로 독�
       # actions/checkout --> 깃허브 공식 액션, 이 Runner안으로 우리 저장소의 코드를 git clone 해오는 역할
 
     - name: 2.python 설치하기
-      uses: actions/setup=python@v5 # 이 Runner안에 파이썬 인터프리터를 설치해주는 공식 액션
+      uses: actions/setup-python@v5 # 이 Runner안에 파이썬 인터프리터를 설치해주는 공식 액션
       with: # uses로 가져온 액션에 "옵션값"을 넘겨줄 때 사용
         python-version: "3.12" # YAML이 3.12를 숫자로 해석해서 3.1로 잘리거나 변조되는 경우가 많다.
         cache: pip # requirements.txt 내용이 안 바뀌는 한 다음 실행부터는 패키지를 새로 다운로드 하지 않고,
