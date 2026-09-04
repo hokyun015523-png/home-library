@@ -1,0 +1,31 @@
+name: 우리집 책장 CI/CD (테스트 +빌드)
+
+on:
+  push:  # 언제 이 워크플로우를 실행할지 정하는 트리거(총의 방아쇠) 
+  pull_request:  # 병합되기 전 미리 검증하는 용도
+
+  jobs: # 아래에 실행할 작업 단위(job)들을 나열한다. - 서로 독립된 가상 컴퓨터 (Runner)에서 실행, 병렬
+    test: # 이 job의 이름(우리가 직접 지은 식별자), Actions 탭 안에 들어가면 이 이름으로 표시된다.
+      runs-on: ubuntu-latest # 깃허브가 무료로 빌려주는 께끗한 가상 컴퓨터(Runner) - > job이 끝나면 폐기
+
+      steps:
+      # 이 job안에서 위에서 아래 순서로 실행할 세부 명령들의 목록, 리스트(-로 시작)이므로 순서가 중요하다.
+      - name: 1.저장소 코드 가져오기 # 이 스텝을 사람이 알아보기 쉽게 부르는 이름(로그에 이 이름으로 표시)
+        uses: actions/checkout@v4 # 남이 미리 만들어둔 재사용 가능한 액션(Action)을 가져다 쓴다.
+        # actions/checkout --> 깃허브 공식 액션, 이 Runner안으로 우리 저장소의 코드를 git clone 해오는 역할
+
+      - name: 2.python 설치하기
+        uses: actions/setup=python@v5 # 이 Runner안에 파이썬 인터프리터를 설치해주는 공식 액션
+        with: # uses로 가져온 액션에 "옵션값"을 넘겨줄 때 사용
+          python-version: "3.12" # YAML이 3.12를 숫자로 해석해서 3.1로 잘리거나 변조되는 경우가 많다.
+          cache: pip # requirements.txt 내용이 안 바뀌는 한 다음 실행부터는 패키지를 새로 다운로드 하지 않고,
+                    # 캐시를 재사용해서 속도가 빨라진다.
+
+      - name: 3.패키지(라이브러리) 설치하기
+        # uses: 처럼 남이 만든 액션과 달리 우리가 직접 셀 명령어를 실행할 때 사용하는 것
+        run: |  # |(파이프) 뒤에 여러 줄을 쓰면 --> 이 줄을 순서대로 셀에서 실행해라
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: 4.테스트 실행하기
+        run: python -m pytest -v # -v (verbose:상세)옵션 --> 통과/ 실패했는지 로그에 찍어준다.
