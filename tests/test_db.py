@@ -15,7 +15,7 @@ def test_책을_저장하고_다시_조회할_수_있다():
     Base.metadata.create_all(engine)
 
     db = SessionLocal()
-    
+
     try:
         book = Book(title='CI 테스트용 책', isbn='9999999999999', author='테스트 저자')
         db.add(book)
@@ -25,7 +25,7 @@ def test_책을_저장하고_다시_조회할_수_있다():
         
         saved = db.get(Book, book.id)   
         assert saved is not None
-        assert saved.titel == 'CI 테스트용 책'
+        assert saved.title == 'CI 테스트용 책'
 
         # models.py에서 default='confirmed'로 정의된 값이 실제로 DB에도 반영되었는지 확인
         assert saved.recognition_status == 'confirmed'
