@@ -34,7 +34,7 @@ jobs: # 아래에 실행할 작업 단위(job)들을 나열한다. - 서로 독�
     needs: test  # 이 job을 실행하기 전에, 먼저 끝내야 하는 job --> test
     # --> test job이 올바르게 실행되지 않으면 도커 이미지도 생성하지 못한다.(안전장치)
     
-    rus-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     if: github.ref == 'refs/heads/main'
     # github.ref --> 지금 이 workflow를 트리거한 브랜치가 뭔지 담긴 값
