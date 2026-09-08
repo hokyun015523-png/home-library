@@ -11,7 +11,7 @@ jobs: # 아래에 실행할 작업 단위(job)들을 나열한다. - 서로 독�
     steps:
     # 이 job안에서 위에서 아래 순서로 실행할 세부 명령들의 목록, 리스트(-로 시작)이므로 순서가 중요하다.
     - name: 1.저장소 코드 가져오기 # 이 스텝을 사람이 알아보기 쉽게 부르는 이름(로그에 이 이름으로 표시)
-      uses: actions/checkout@v4 # 남이 미리 만들어둔 재사용 가능한 액션(Action)을 가져다 쓴다.
+      uses: actions/checkout@v5 # 남이 미리 만들어둔 재사용 가능한 액션(Action)을 가져다 쓴다.
       # actions/checkout --> 깃허브 공식 액션, 이 Runner안으로 우리 저장소의 코드를 git clone 해오는 역할
 
     - name: 2.python 설치하기
@@ -43,7 +43,7 @@ jobs: # 아래에 실행할 작업 단위(job)들을 나열한다. - 서로 독�
     
     steps:
       - name: 코드 가져오기
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Docker Hub 로그인
         uses: docker/login-action@v3
