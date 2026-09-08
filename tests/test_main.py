@@ -1,5 +1,5 @@
 '''
-home_library/tests/teat_main.py 
+home_library/tests/test_main.py 
 -----------------------------------
 GitHub Actions 실습용 최초 테스트 v5
 - DB, 외부 API(국립중앙도서관 api key) 없어도 통과하는 순수 로직만 검증한다.
@@ -12,7 +12,7 @@ from services.recognition import normalize_isbn
 
 def test_하이픈이_있는_isbn13을_숫자로_정리한다():
     # 하이픈을 제거하고 순수 숫자 13자리 문자열로 반환되는지 확인한다.
-    assert normalize_isbn('978-89-6626-318-9')  == '00000000000'
+    assert normalize_isbn('978-89-6626-318-9')  == '9788966263189'
 
 def test_체크섬이_틀린_isbn은_none을_반환한다():
     # 마지막 자리만 9만 0으로 바꿔서 체크섬이 깨지도록 해본다
