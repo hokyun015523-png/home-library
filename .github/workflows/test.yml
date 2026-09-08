@@ -1,8 +1,8 @@
 name: 우리집 책장 CI/CD (테스트 +빌드)
 
 on:
-  push:  # 언제 이 워크플로우를 실행할지 정하는 트리거(총의 방아쇠) 
-  pull_request:  # 병합되기 전 미리 검증하는 용도
+  push:  # 언제 이 워크플로우를 실행할지 정하는 트리거(총의 방아쇠), 모든 브랜치에 PUSH할 때마다
+  pull_request:  # 병합되기 전 미리 검증하는 용도, PR을 새로 만들거나, PR에 커밋을 추가로 올릴 때도  워크플로우가 자동 실행됨
 
 jobs: # 아래에 실행할 작업 단위(job)들을 나열한다. - 서로 독립된 가상 컴퓨터 (Runner)에서 실행, 병렬
   test: # 이 job의 이름(우리가 직접 지은 식별자), Actions 탭 안에 들어가면 이 이름으로 표시된다.
@@ -29,3 +29,38 @@ jobs: # 아래에 실행할 작업 단위(job)들을 나열한다. - 서로 독�
         
     - name: 4.테스트 실행하기
       run: python -m pytest -v # -v (verbose:상세)옵션 --> 통과/ 실패했는지 로그에 찍어준다.
+
+  build: # 이 job의 이름, test job과 완전히 별개의 job
+    needs: test  # 이 job을 실행하기 전에, 먼저 끝내야 하는 job --> test
+    # --> test job이 올바르게 실행되지 않으면 도커 이미지도 생성하지 못한다.(안전장치)
+    
+    rus-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/main'
+    # github.ref --> 지금 이 workflow를 트리거한 브랜치가 뭔지 담긴 값
+    # 'refs/heads/main' --> 브랜치 이름이 정확히 main일 때는 뜻하는 깃허브 내부 표기법
+    #      --> 실제로 main에 merge(직접 push)됐을 때만 이미지를 만든다.(PR 또는 다른 브랜치 x)
+    
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: Docker Hub 로그인
+        uses: docker/login-action@v3
+        # docker/login-action --> 이 Runner가 Docker Hub에 로그인해서 이미지를 push할 권한을 얻게해준다
+        
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          # ${{}} --> 깃허브 액션에서 값을 여기에 끼워넣으라는 표현식 문법
+          # secrets.DOCKER_USERNAME --> 저장소 settings에 등록해둔 비밀값을 가져온다.
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: 이미지 빌드 및 Docker Hub 업로드
+        uses: docker/build-push-action@v6 # 'docker build' + 'docker push' 두 명령어를 한번에
+                                          # 실행해주는 Docker 공식 액션
+        with:
+          context: .
+          # context: . --> 저장소 루트에 있는 Dockerfile을 기준으로 빌드해라는 뜻
+          push: true # 빌드만 하고 끝난 것이 아니라, 위에서 로그인한 계정으로 Docker Hub에 업로드까지
+          tags: ${{ secrets.DOCKER_USERNAME }}/home-library:latest  # 이미지에 붙이 이름표(태그)
+          # 계정명/이미지이름: 버전
