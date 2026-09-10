@@ -16,7 +16,7 @@ COPY main.py .
 COPY database.py .
 COPY models.py .
 COPY streamlit_app.py .
-COPY services/ ./templates/
+COPY services/ ./services/
 COPY templates/ ./templates/
 COPY static/ ./static/
 

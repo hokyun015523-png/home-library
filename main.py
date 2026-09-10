@@ -86,7 +86,7 @@ def register_book(isbn: str=Form(...), image: UploadFile=File(...), db: Session=
     """isbn, 책 표지를 DB에 등록"""
     # image.file.read() --> 업로드 파일 내부의 실제 파일 객체를 열어서 내용을 전부 읽어
     #                       bytes(0과 1로 나열)로 가져온다.
-    row = image.file.read()
+    raw = image.file.read()
 
     # image.filename --> 사용자가 업로드한 원래 파일 이름
     result = register_book_service(isbn, raw, image.filename, db)
